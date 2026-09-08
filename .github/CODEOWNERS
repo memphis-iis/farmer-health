@@ -1,0 +1,5 @@
+# CODEOWNERS — memphis-iis/farmer-health
+# Required reviews are enforced via the "Protect main (GA)" ruleset.
+
+*       @JRustyHaner @memphis-iis/iis-developers
+/.github/ @JRustyHaner @memphis-iis/iis-developers

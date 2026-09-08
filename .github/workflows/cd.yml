@@ -1,0 +1,81 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify tests before deploy path
+        run: npm test
+
+  deploy:
+    name: Deploy to IIS
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Manual only until IIS_* secrets + production environment are configured.
+    if: github.event_name == 'workflow_dispatch'
+    environment: production
+
+    # Required repository secrets (Settings → Secrets and variables → Actions):
+    #   IIS_SSH_HOST   — e.g. iis.memphis.edu or Tailscale hostname
+    #   IIS_SSH_USER   — SSH user on the IIS host
+    #   IIS_SSH_KEY    — private key with deploy access
+    #   IIS_REMOTE_DIR — remote path for farmer-health
+    # Optional:
+    #   IIS_SSH_PORT   — defaults to 22
+    env:
+      IIS_SSH_HOST: ${{ secrets.IIS_SSH_HOST }}
+      IIS_SSH_USER: ${{ secrets.IIS_SSH_USER }}
+      IIS_SSH_KEY: ${{ secrets.IIS_SSH_KEY }}
+      IIS_REMOTE_DIR: ${{ secrets.IIS_REMOTE_DIR }}
+      IIS_SSH_PORT: ${{ secrets.IIS_SSH_PORT || 22 }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify deploy secrets
+        run: |
+          missing=0
+          for v in IIS_SSH_HOST IIS_SSH_USER IIS_SSH_KEY IIS_REMOTE_DIR; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Missing secret: $v"
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "::error::Configure IIS_* secrets and the production environment, then re-run."
+            exit 1
+          fi
+          echo "Deploy secrets present. Wire rsync/ssh steps when the app deploy layout is defined."
+
+      - name: Deploy placeholder
+        run: |
+          echo "CD deploy stub — replace this step with the real IIS deploy once the app exists."
+          echo "Target: ${IIS_SSH_USER}@${IIS_SSH_HOST}:${IIS_REMOTE_DIR} (port ${IIS_SSH_PORT})"

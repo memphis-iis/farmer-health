@@ -1,0 +1,12 @@
+{
+  "name": "farmer-health",
+  "version": "0.0.1",
+  "private": true,
+  "description": "IIS farmer-health — bootstrap CI until the application lands",
+  "scripts": {
+    "test": "node --test tests/**/*.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

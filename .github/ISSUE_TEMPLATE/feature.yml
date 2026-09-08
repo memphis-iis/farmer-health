@@ -1,0 +1,42 @@
+name: Feature / task
+description: New work for GA or product backlog
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / goal
+      description: What should change and why?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checklist of done. Include docs and tests if behavior changes.
+      placeholder: |
+        - [ ]
+        - [ ] Docs updated (or N/A)
+        - [ ] Tests added/updated
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - App / UI
+        - API
+        - Auth
+        - Data
+        - Deploy / CI
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: milestone
+    attributes:
+      label: Milestone / GA slice
+      description: Optional milestone name or sprint
