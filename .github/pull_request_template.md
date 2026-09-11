@@ -12,7 +12,7 @@ Closes #
 - [ ] Env / secrets / deploy notes updated if behavior changed (or N/A)
 
 ## Test plan
-- [ ] `npm test` (or CI **Test** green)
+- [ ] `python manage.py test` (or CI **Test** green)
 - [ ] Automated tests added/updated for behavior changes (or N/A for docs-only)
 - [ ] Manual checks (list below)
 

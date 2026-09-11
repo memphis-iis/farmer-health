@@ -41,6 +41,8 @@ git checkout -b <issue-number>-short-slug origin/main
 ## Local commands
 
 ```bash
-npm ci
-npm test
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py test
 ```
