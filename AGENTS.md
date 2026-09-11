@@ -4,10 +4,11 @@ Guidance for LLM coding agents (Cursor, Copilot, Claude, etc.) working in this r
 
 ## What this repo is
 
-**farmer-health** is an IIS project repository. Governance, CI, and contribution rules live here from day one; application code will grow under this tree.
+**farmer-health** is an IIS Django/Python project repository. Governance, CI, and contribution rules live here from day one; application code will grow under this tree.
 
 | Path | Role |
 |------|------|
+| `config/` | Django project settings, urls, wsgi/asgi |
 | `tests/` | Automated tests (bootstrap smoke + future app tests) |
 | `.github/` | CI/CD, CODEOWNERS, issue/PR templates |
 | `CONTRIBUTING.md` | Human contribution pipeline (read this) |
@@ -35,11 +36,13 @@ Details: [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Environment & commands
 
-Node **22+**.
+Python **3.12+** (CI uses 3.12). Django **5.2**.
 
 ```bash
-npm ci
-npm test
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py test
 ```
 
 ## How to make a change (agent checklist)
