@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 # Create your models here.
 class User(AbstractUser):
     class NotifyChannel(models.TextChoices):
-        Email = "EMAIL", "Email"
+        EMAIL = "EMAIL", "EMAIL"
         SMS = "SMS", "SMS"
     
     email = models.EmailField(unique=True)
@@ -22,12 +22,17 @@ class User(AbstractUser):
     preferred_channel = models.CharField(
         max_length=5,
         choices=NotifyChannel.choices,
-        default=NotifyChannel.Email,
+        default=NotifyChannel.EMAIL,
 
     )
 
     last_assessment_at = models.DateTimeField(null=True, blank=True)
-    redcap_id = models.CharField(max_length=64, blank=True)
+    redcap_record_id = models.CharField(max_length=64, blank=True)
 
     REQUIRED_FIELDS = ["email", "phone_number"]
+
+    def save(self, *args, **kwargs):
+        if self.email:
+            self.email = self.email.lower()
+        super().save(*args, **kwargs)
 

@@ -20,6 +20,17 @@ class UserModelTests(TestCase):
         self.assertTrue(user.notifications_enabled)
         self.assertEqual(user.preferred_channel, "EMAIL")
         self.assertIsNone(user.last_assessment_at)
+        self.assertEqual(user.redcap_record_id, "")
+
+    def test_email_is_lowercased_on_save(self):
+        user = self.User.objects.create_user(
+            username="farmer2",
+            email="Farmer2@Example.COM",
+            password="x",
+            phone_number="9015550104",
+        )
+        user.refresh_from_db()
+        self.assertEqual(user.email, "farmer2@example.com")
 
     def test_email_must_be_unique(self):
         self.User.objects.create_user(
@@ -30,6 +41,17 @@ class UserModelTests(TestCase):
             self.User.objects.create_user(
                 username="b", email="same@example.com",
                 password="x", phone_number="9015550102",
+            )
+
+    def test_email_unique_ignores_case(self):
+        self.User.objects.create_user(
+            username="a", email="case@example.com",
+            password="x", phone_number="9015550105",
+        )
+        with self.assertRaises(IntegrityError):
+            self.User.objects.create_user(
+                username="b", email="CASE@example.com",
+                password="x", phone_number="9015550106",
             )
 
     def test_phone_must_be_unique(self):
