@@ -7,17 +7,17 @@ from assessments.models import Survey
 
 class SurveyModelTests(TestCase):
     def test_defaults(self):
-        s = Survey.objects.create(title="Farm Stress")
-        self.assertEqual(s.version, 1)
-        self.assertEqual(s.question_count, 59)
-        self.assertEqual((s.scale_min, s.scale_max), (1, 5))
-        self.assertTrue(s.is_active)
-        self.assertFalse(s.is_validated)
+        survey = Survey.objects.create(title="Farm Stress")
+        self.assertEqual(survey.version, 1)
+        self.assertEqual(survey.question_count, 59)
+        self.assertEqual((survey.scale_min, survey.scale_max), (1, 5))
+        self.assertTrue(survey.is_active)
+        self.assertFalse(survey.is_validated)
 
     def test_scale_min_must_be_less_than_scale_max(self):
-        s = Survey(title="Bad", scale_min=5, scale_max=1)
+        survey = Survey(title="Bad", scale_min=5, scale_max=1)
         with self.assertRaises(ValidationError):
-            s.full_clean()
+            survey.full_clean()
 
     def test_title_and_version_must_be_unique_together(self):
         Survey.objects.create(title="Farm Stress", version=1)
@@ -25,5 +25,5 @@ class SurveyModelTests(TestCase):
             Survey.objects.create(title="Farm Stress", version=1)
 
     def test_str(self):
-        s = Survey(title="Farm Stress", version=2)
-        self.assertEqual(str(s), "Farm Stress (v2)")
+        survey = Survey(title="Farm Stress", version=2)
+        self.assertEqual(str(survey), "Farm Stress (v2)")
