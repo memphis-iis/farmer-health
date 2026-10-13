@@ -1,3 +1,5 @@
+from math import asin, cos, radians, sin, sqrt
+
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -51,3 +53,54 @@ class Question(models.Model):
 
     def __str__(self):
         return f"Q{self.order}: {self.text[:50]}"
+
+class Tier(models.TextChoices):
+    GREEN = "GREEN", "Green"
+    YELLOW = "YELLOW", "Yellow"
+    RED = "RED", "Red"
+
+
+EARTH_RADIUS_MILES = 3958.8
+
+
+class Resource(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    tier = models.CharField(max_length=6, choices=Tier.choices)
+    category = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    website = models.URLField(blank=True)
+    address = models.CharField(max_length=300, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    is_national = models.BooleanField(default=False)
+    is_crisis = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["name"]
+
+    def clean(self):
+        has_lat = self.latitude is not None
+        has_lng = self.longitude is not None
+        if has_lat != has_lng:
+            raise ValidationError("Provide both latitude and longitude, or neither.")
+        if has_lat and not (-90 <= self.latitude <= 90):
+            raise ValidationError("latitude must be between -90 and 90.")
+        if has_lng and not (-180 <= self.longitude <= 180):
+            raise ValidationError("longitude must be between -180 and 180.")
+        if not self.is_national and not has_lat:
+            raise ValidationError("Non-national resources need latitude and longitude.")
+
+    def distance_miles(self, lat, lng):
+        """Great-circle (haversine) distance in miles; None if no coordinates."""
+        if self.latitude is None or self.longitude is None:
+            return None
+        lat1, lng1, lat2, lng2 = map(radians, (lat, lng, self.latitude, self.longitude))
+        a = (
+            sin((lat2 - lat1) / 2) ** 2
+            + cos(lat1) * cos(lat2) * sin((lng2 - lng1) / 2) ** 2
+        )
+        return 2 * EARTH_RADIUS_MILES * asin(sqrt(a))
+
+    def __str__(self):
+        return f"{self.name} ({self.tier})"
