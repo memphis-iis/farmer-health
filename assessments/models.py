@@ -24,5 +24,30 @@ class Survey(models.Model):
         if self.scale_min >= self.scale_max:
             raise ValidationError("scale_min must be less than scale_max.")
 
+    def get_questions(self):
+        """Return this survey's questions in their fixed order."""
+        return list(self.questions.order_by("order"))
+
     def __str__(self):
         return f"{self.title} (v{self.version})"
+
+
+class Question(models.Model):
+    survey = models.ForeignKey(
+        Survey, on_delete=models.CASCADE, related_name="questions"
+    )
+    text = models.TextField()
+    order = models.PositiveSmallIntegerField()
+    is_placeholder = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["survey", "order"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["survey", "order"],
+                name="unique_question_order_per_survey",
+            )
+        ]
+
+    def __str__(self):
+        return f"Q{self.order}: {self.text[:50]}"
