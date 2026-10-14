@@ -1,7 +1,6 @@
-from math import asin, cos, radians, sin, sqrt
-
 from django.core.exceptions import ValidationError
 from django.db import models
+from geopy.distance import geodesic
 
 
 class Survey(models.Model):
@@ -60,9 +59,6 @@ class Tier(models.TextChoices):
     RED = "RED", "Red"
 
 
-EARTH_RADIUS_MILES = 3958.8
-
-
 class Resource(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
@@ -92,15 +88,9 @@ class Resource(models.Model):
             raise ValidationError("Non-national resources need latitude and longitude.")
 
     def distance_miles(self, lat, lng):
-        """Great-circle (haversine) distance in miles; None if no coordinates."""
         if self.latitude is None or self.longitude is None:
             return None
-        lat1, lng1, lat2, lng2 = map(radians, (lat, lng, self.latitude, self.longitude))
-        a = (
-            sin((lat2 - lat1) / 2) ** 2
-            + cos(lat1) * cos(lat2) * sin((lng2 - lng1) / 2) ** 2
-        )
-        return 2 * EARTH_RADIUS_MILES * asin(sqrt(a))
-
+        return geodesic((lat, lng), (self.latitude, self.longitude)).miles
+ 
     def __str__(self):
         return f"{self.name} ({self.tier})"

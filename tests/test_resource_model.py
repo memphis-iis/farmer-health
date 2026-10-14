@@ -23,7 +23,7 @@ class ResourceModelTests(TestCase):
     def test_distance_miles(self):
         r = Resource(name="Jackson", tier=Tier.GREEN, latitude=32.2988, longitude=-90.1848)
         self.assertAlmostEqual(r.distance_miles(32.2988, -90.1848), 0, places=3)
-        # Jackson, MS -> New Orleans, LA is roughly 160 miles
+        
         self.assertAlmostEqual(r.distance_miles(29.9511, -90.0715), 162, delta=8)
 
     def test_distance_none_without_coordinates(self):
