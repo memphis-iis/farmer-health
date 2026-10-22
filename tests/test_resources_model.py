@@ -6,7 +6,7 @@ from resources.models import Resource, Tier
 
 class ResourceModelTests(TestCase):
     def test_national_resource_without_coordinates_is_valid(self):
-        Resource(name="901", category="Crisis", tier=Tier.RED, is_national=True, is_crisis=True).full_clean()
+        Resource(name="988", category="Crisis", tier=Tier.RED, is_national=True, is_crisis=True).full_clean()
 
     def test_local_resource_requires_coordinates(self):
         with self.assertRaises(ValidationError):

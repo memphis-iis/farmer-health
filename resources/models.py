@@ -25,7 +25,7 @@ class Resource(models.Model):
     is_crisis = models.BooleanField(default=False)
  
     class Meta:
-        ordering = ["tier", "name"]
+        ordering = ["name"]
         indexes = [
             models.Index(fields=["latitude", "longitude"]),
             models.Index(fields=["is_crisis", "is_national"]),
