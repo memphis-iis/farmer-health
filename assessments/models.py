@@ -58,7 +58,7 @@ class Question(models.Model):
 class TrendDirection(models.TextChoices):
     IMPROVING = "IMPROVING", "Improving"
     STABLE = "STABLE", "Stable"
-    DECLINED = "DECLINED", "Decline"
+    DECLINED = "DECLINED", "Declined"
 
 class Assessment(models.Model):
     
