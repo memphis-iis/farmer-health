@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     "core",
     "assessments",
     "accounts",
-    "resources"
+    "resources",
+    "progress"
 ]
 
 MIDDLEWARE = [
