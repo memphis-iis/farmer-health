@@ -5,7 +5,7 @@ from datetime import timedelta
 from core.models import LandingMessage
 
 
-class LandingMessageModelTest(TestCase):
+class LandingpageModelTest(TestCase):
 
     def test_create_landing_message(self):
         """Test that a landing message can be created."""

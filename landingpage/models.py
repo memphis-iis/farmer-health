@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class LandingMessage(models.Model):
+class Landingpage(models.Model):
     text = models.TextField()
     active = models.BooleanField(default=True)
     start_date = models.DateTimeField(default=timezone.now)
