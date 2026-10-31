@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from django.test import SimpleTestCase
 
-from progress.weighted_history import (
+from progress.decayed_average import (
     IMPROVING, STABLE, WORSENING, WeightedHistoryModel,
 )
 
@@ -26,10 +26,10 @@ class WeightedHistoryModelTests(SimpleTestCase):
     def test_recent_results_count_more_than_old_ones(self):
         past = [(self.today - timedelta(days=1), 5),
                 (self.today - timedelta(days=365), 1)]
-        self.assertGreater(self.model.weighted_history(past, self.today), 4.5)
+        self.assertGreater(self.model.decayed_average(past, self.today), 4.5)
 
     def test_empty_history_is_none(self):
-        self.assertIsNone(self.model.weighted_history([], self.today))
+        self.assertIsNone(self.model.decayed_average([], self.today))
 
     def test_blend_uses_only_today_when_there_is_no_history(self):
         self.assertEqual(self.model.blended_score(4, self.today, []), 4.0)

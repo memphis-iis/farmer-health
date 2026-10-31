@@ -27,7 +27,7 @@ class WeightedHistoryModel:
             raise ValueError("age_days cannot be negative.")
         return 0.5 ** (age_days / self.half_life_days)
 
-    def weighted_history(self, past_results, today):
+    def decayed_average(self, past_results, today):
         """Return the decay-weighted average of (date, score) pairs, or None."""
         weights = []
         total = 0.0
@@ -41,7 +41,7 @@ class WeightedHistoryModel:
 
     def blended_score(self, today_score, today, past_results):
         """Blend today's score with the weighted history."""
-        history = self.weighted_history(past_results, today)
+        history = self.decayed_average(past_results, today)
         if history is None:
             return float(today_score)
         return self.today_weight * today_score + (1 - self.today_weight) * history
