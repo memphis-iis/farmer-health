@@ -1,8 +1,9 @@
+
 from django.test import TestCase
 from django.utils import timezone
 from datetime import timedelta
 
-from core.models import LandingMessage
+from landingpage.models import Landingpage
 
 
 class LandingpageModelTest(TestCase):
@@ -11,7 +12,7 @@ class LandingpageModelTest(TestCase):
         """Test that a landing message can be created."""
         now = timezone.now()
 
-        message = LandingMessage.objects.create(
+        message = Landingpage.objects.create(
             text="Welcome to the Farmer Wellbeing Dashboard!",
             active=True,
             start_date=now,
@@ -28,7 +29,7 @@ class LandingpageModelTest(TestCase):
 
     def test_landing_message_can_be_inactive(self):
         """Test that a landing message can be inactive."""
-        message = LandingMessage.objects.create(
+        message = Landingpage.objects.create(
             text="Maintenance notice",
             active=False
         )
@@ -37,7 +38,7 @@ class LandingpageModelTest(TestCase):
 
     def test_end_date_can_be_empty(self):
         """Test that a message can have no expiration date."""
-        message = LandingMessage.objects.create(
+        message = Landingpage.objects.create(
             text="Permanent welcome message",
             active=True,
             end_date=None
