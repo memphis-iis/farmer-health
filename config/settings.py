@@ -33,8 +33,8 @@ INSTALLED_APPS = [
     "assessments",
     "accounts",
     "resources",
-    "progress",
-    "landingpage"
+    "progress"
+    
 ]
 
 MIDDLEWARE = [
