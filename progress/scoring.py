@@ -40,21 +40,21 @@ class SimpleAverageModel(ScoringModel):
     STABLE_THRESHOLD = 0.1
 
     def score(self, user, assessment):
-        if assessment.user_id != user_id:
+        if assessment.user_id != user.id:
             raise ValueError("Assessment does not belong to this user")
 
         today = self._average_of(assessment)
-        earlier = self._completed(user).filter(completed__lt=assessment.completed_at)
+        earlier = self._completed(user).filter(completed_at__lt=assessment.completed_at)
 
         averages = [a.average_score for a in earlier]
-        average.append(today)
+        averages.append(today)
 
 
         return ScoreResult(
             average_score=today,
             tier=assessment.tier,
             weighted_score=self._mean(averages),
-            trend_direction-self._trend(averages),
+            trend_direction=self._trend(averages),
         )
 
     def weighted_history(self, user):
@@ -67,7 +67,7 @@ class SimpleAverageModel(ScoringModel):
                 ProgressPoint(
                     date=a.completed_at.date(),
                     average_score=a.average_score,
-                    weighted_score=self.mean(running),
+                    weighted_score=self._mean(running),
                     tier=a.tier
                 )
             )
