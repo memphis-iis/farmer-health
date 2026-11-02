@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Progress Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7f6;
+            color: #26352e;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+            font-size: 30px;
+        }
+
+        .header p {
+            color: #68766e;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .card, .section {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .card h3 {
+            color: #68766e;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .value {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .green { color: #21864b; }
+        .yellow { color: #bd8a13; }
+        .red { color: #c43c3c; }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        .chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 18px;
+            min-height: 220px;
+            padding: 20px 10px 0;
+            border-bottom: 1px solid #dce4df;
+            overflow-x: auto;
+        }
+
+        .bar-item {
+            min-width: 45px;
+            flex: 1;
+            max-width: 90px;
+            text-align: center;
+        }
+
+        .bar {
+            width: 100%;
+            min-height: 5px;
+            background: #39865b;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .bar-item small {
+            display: block;
+            margin: 8px 0;
+            color: #68766e;
+            font-size: 11px;
+        }
+
+        .score-label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #edf0ee;
+        }
+
+        th {
+            color: #68766e;
+            font-size: 13px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 45px 20px;
+            color: #68766e;
+        }
+
+        .empty h2 {
+            color: #26352e;
+        }
+
+        @media (max-width: 750px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                margin: 25px auto;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>My Progress Dashboard</h1>
+        <p>Track your wellbeing and see how your progress changes over time.</p>
+    </div>
+
+    {% if has_assessments %}
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Average Score</h3>
+            <div class="value">
+                {% if average_score != None %}
+                    {{ average_score|floatformat:2 }}
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Current Weighted Score</h3>
+            <div class="value">
+                {% if current_weighted_score != None %}
+                    {{ current_weighted_score|floatformat:2 }}
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Wellbeing Tier</h3>
+            <div class="value
+                {% if latest_assessment.tier == 'GREEN' %}green
+                {% elif latest_assessment.tier == 'YELLOW' %}yellow
+                {% elif latest_assessment.tier == 'RED' %}red
+                {% endif %}">
+                {{ wellbeing_tier|default:"Not available" }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Trend Direction</h3>
+            <div class="value">{{ trend_direction }}</div>
+        </div>
+
+    </div>
+
+    <div class="section">
+        <h2>Progress Over Time</h2>
+
+        {% if chart_data %}
+        <p>Average assessment scores (scale of 1 to 5)</p>
+
+        <div class="chart">
+            {% for point in chart_data %}
+            <div class="bar-item">
+                <div class="score-label">{{ point.score|floatformat:1 }}</div>
+                <div class="bar" style="height: {{ point.height }}px;"></div>
+                <small>{{ point.label }}</small>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No assessment scores are available to display yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Assessment History</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Average Score</th>
+                        <th>Weighted Score</th>
+                        <th>Wellbeing Tier</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for assessment in assessments %}
+                    <tr>
+                        <td>{{ assessment.completed_at|date:"M d, Y" }}</td>
+                        <td>{{ assessment.average_score|default:"—" }}</td>
+                        <td>{{ assessment.weighted_score|default:"—" }}</td>
+                        <td>{{ assessment.get_tier_display|default:"—" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% else %}
+
+    <div class="section empty">
+        <h2>Welcome to Your Progress Dashboard</h2>
+        <p>You haven't completed any assessments yet.</p>
+        <p>Once you complete your first assessment, your scores and progress history will appear here.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+</body>
+</html>
