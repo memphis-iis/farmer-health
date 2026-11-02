@@ -43,7 +43,13 @@ class SimpleAverageModel(ScoringModel):
         if assessment.user_id != user.id:
             raise ValueError("Assessment does not belong to this user")
 
+        if assessment.completed_at is None:
+            raise ValueError("Cannot score an assessemnt that isn't completed")
+
         today = self._average_of(assessment)
+        if today is None:
+            raise ValueError("Assement has no responses to average")
+
         earlier = self._completed(user).filter(completed_at__lt=assessment.completed_at)
 
         averages = [a.average_score for a in earlier]
@@ -97,7 +103,7 @@ class SimpleAverageModel(ScoringModel):
 
         diff = averages[-1] - self._mean(averages[:-1])
         if diff > self.STABLE_THRESHOLD:
-            # Higher score = more stress = wellbeing DECLINED
+            # Higher score = more stress = wellbeing worsened 
             return TrendDirection.WORSENING
         if diff < -self.STABLE_THRESHOLD:
             return TrendDirection.IMPROVING

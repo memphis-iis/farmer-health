@@ -113,3 +113,8 @@ class SimpleAverageModelTests(TestCase):
 
     def test_no_assessments(self):
         self.assertEqual(self.model.weighted_history(self.user), [])
+
+    def test_assessment_with_no_responses_raises(self):
+        empty = self.make_assessment(self.user, days_ago=0, average=None)
+        with self.assertRaises(ValueError):
+            self.model.score(self.user, empty)
