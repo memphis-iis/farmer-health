@@ -1,0 +1,12 @@
+{% extends "assessments/base.html" %}
+{% block title %}Check-in{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{% if resuming %}Welcome back{% else %}Your check-in{% endif %}</h1>
+    <p>This takes a few minutes. There are no right or wrong answers, and you can stop and come back at any time.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">{% if resuming %}Continue where I left off{% else %}Start{% endif %}</button>
+    </form>
+</div>
+{% endblock %}

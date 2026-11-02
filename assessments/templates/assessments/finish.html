@@ -1,0 +1,13 @@
+{% extends "assessments/base.html" %}
+{% block title %}Finish{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>You have answered all {{ answered }} questions</h1>
+    <p>When you finish, your answers are saved. You can look back over them first if you like.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Finish</button>
+        <a href="{% url 'assessments:page' page=1 %}">Go back to the first page</a>
+    </form>
+</div>
+{% endblock %}
