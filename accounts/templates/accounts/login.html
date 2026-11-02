@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Farmer Health</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f3f7f2;
+            color: #26352a;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            display: block;
+            width: 150px;
+            max-height: 110px;
+            object-fit: contain;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            margin-bottom: 28px;
+            text-align: center;
+            color: #68756b;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccd5cd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #478451;
+            border-color: #478451;
+        }
+
+        .error {
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fff0f0;
+            color: #a12626;
+            font-size: 14px;
+        }
+
+        .field-error {
+            margin-top: 5px;
+            color: #a12626;
+            font-size: 13px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #28743b;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #205d30;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: #68756b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="login-container">
+        <img
+            src="{% static 'accounts/images/farmer-health-logo.png' %}"
+            alt="Farmer Health logo"
+            class="logo"
+        >
+
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Sign in to your Farmer Health account</p>
+
+        {% if form.errors %}
+            <div class="error" role="alert">
+                Your username or password is incorrect.
+                Please try again.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% for error in form.username.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            {% for error in form.password.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+
+            <button type="submit">Sign In</button>
+        </form>
+        <p>
+    <a href="{% url 'accounts:password_reset' %}">
+        Forgot your password?
+    </a>
+</p>
+
+<p>
+    Don't have an account?
+    <a href="{% url 'accounts:register' %}">
+        Create an account
+    </a>
+</p>
+        <p class="footer">Farmer Health | Your wellbeing matters.</p>
+    </main>
+</body>
+</html>
