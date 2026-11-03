@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Wellbeing check-in{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; color: #222; line-height: 1.5; }
+        header, footer { background: #fff; padding: 14px 24px; border-bottom: 1px solid #ddd; }
+        footer { border-top: 1px solid #ddd; border-bottom: none; margin-top: 32px; font-size: 0.95rem; }
+        main { max-width: 760px; margin: 24px auto; padding: 0 20px; }
+        .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 18px 20px; margin-bottom: 16px; }
+        fieldset { border: 0; padding: 0; margin: 0; }
+        legend { font-weight: bold; margin-bottom: 8px; }
+        .choices label { display: inline-block; min-width: 44px; padding: 10px 14px; margin: 0 6px 6px 0;
+                         border: 1px solid #888; border-radius: 6px; cursor: pointer; background: #fff; }
+        .choices input { margin-right: 6px; }
+        .error { color: #8a1c1c; font-weight: bold; margin-top: 6px; }
+        .progress { color: #555; margin-bottom: 12px; }
+        button { font-size: 1rem; padding: 10px 20px; border: 1px solid #2d5e3e; background: #2d5e3e;
+                 color: #fff; border-radius: 6px; cursor: pointer; margin-right: 8px; }
+        button.secondary { background: #fff; color: #2d5e3e; }
+    </style>
+</head>
+<body>
+    <header><strong>Farmer Wellbeing check-in</strong></header>
+    <main>
+    {% if messages %}
+    <div class="card" role="alert">
+        {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+    </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+    </main>
+    <footer>
+        If you are struggling right now, you can call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline) at any time.
+    </footer>
+</body>
+</html>
