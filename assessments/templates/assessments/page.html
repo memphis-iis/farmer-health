@@ -1,0 +1,27 @@
+{% extends "assessments/base.html" %}
+{% block title %}Questions, page {{ page }} of {{ pages }}{% endblock %}
+{% block content %}
+<p class="progress">Page {{ page }} of {{ pages }} &middot; {{ answered }} of {{ total }} answered</p>
+<form method="post">
+    {% csrf_token %}
+    {% for row in rows %}
+    <div class="card">
+        <fieldset>
+            <legend>{{ row.question.order }}. {{ row.question.text }}</legend>
+            <div class="choices">
+                {% for choice in choices %}
+                <label>
+                    <input type="radio" name="q{{ row.question.id }}" value="{{ choice }}"
+                           {% if row.answer == choice %}checked{% endif %}>{{ choice }}
+                </label>
+                {% endfor %}
+            </div>
+            {% if row.error %}<p class="error">{{ row.error }}</p>{% endif %}
+        </fieldset>
+    </div>
+    {% endfor %}
+    {% if not is_first %}<button type="submit" name="nav" value="back" class="secondary">Back</button>{% endif %}
+    <button type="submit" name="nav" value="save" class="secondary">Save and stay</button>
+    <button type="submit" name="nav" value="next">{% if is_last %}Review and finish{% else %}Next{% endif %}</button>
+</form>
+{% endblock %}
