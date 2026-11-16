@@ -376,3 +376,11 @@ a:hover { color: var(--fh-green-dark); }
   outline: 3px solid var(--fh-green);
   outline-offset: -4px;
 }
+/* ---------- Account pages ---------- */
+.fh-card > .fh-error {
+  margin: 0 0 var(--fh-space-4);
+}
+
+.fh-actions + p {
+  margin-top: var(--fh-space-4);
+}
