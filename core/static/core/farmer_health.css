@@ -384,3 +384,25 @@ a:hover { color: var(--fh-green-dark); }
 .fh-actions + p {
   margin-top: var(--fh-space-4);
 }
+/* ---------- Forms that render fields automatically ---------- */
+.fh-form input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]) {
+  width: 100%;
+  min-height: var(--fh-touch);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--fh-field-border);
+  border-radius: var(--fh-radius);
+  background: var(--fh-white);
+  color: var(--fh-text);
+  font: inherit;
+}
+
+.fh-form input:focus-visible {
+  outline: 3px solid var(--fh-green);
+  outline-offset: 2px;
+}
+
+.errorlist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
