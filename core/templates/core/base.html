@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'core/farmer_health.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body{% if user.is_authenticated %} class="fh-has-nav"{% endif %}></body>
     <a class="fh-skip-link" href="#main">Skip to main content</a>
 
     <header class="fh-header">
@@ -36,5 +36,12 @@
                <a href="tel:988"><strong>988</strong></a> (Suicide &amp; Crisis Lifeline) at any time.</p>
         </div>
     </footer>
+
+    {% if user.is_authenticated %}
+    <nav class="fh-nav" aria-label="Main">
+        <a href="{% url 'assessments:start' %}"{% if request.resolver_match.app_name == 'assessments' %} aria-current="page"{% endif %}>Check-in</a>
+        <a href="{% url 'progress:dashboard' %}"{% if request.resolver_match.app_name == 'progress' %} aria-current="page"{% endif %}>My progress</a>
+    </nav>
+    {% endif %}
 </body>
 </html>

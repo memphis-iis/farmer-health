@@ -340,3 +340,39 @@ a:hover { color: var(--fh-green-dark); }
   line-height: 1.6;
   margin: 0 0 var(--fh-space-5);
 }
+/* ---------- Bottom navigation ---------- */
+.fh-has-nav { padding-bottom: 4.5rem; }
+
+.fh-nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  background: var(--fh-white);
+  border-top: 1px solid var(--fh-border);
+}
+
+.fh-nav a {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  border-top: 0.25rem solid transparent;
+  color: var(--fh-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fh-nav a[aria-current="page"] {
+  background: var(--fh-green-light);
+  border-top-color: var(--fh-green);
+  color: var(--fh-green-dark);
+}
+
+.fh-nav a:focus-visible {
+  outline: 3px solid var(--fh-green);
+  outline-offset: -4px;
+}
