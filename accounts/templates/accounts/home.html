@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmer Health</title>
-</head>
-<body>
-    <h1>Welcome to Farmer Health!</h1>
-    <p>You have successfully signed in.</p>
+{% extends "core/base.html" %}
 
-    <form method="post" action="{% url 'accounts:logout' %}">
-        {% csrf_token %}
-        <button type="submit">Log Out</button>
-    </form>
-</body>
-</html>
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to Farmer Health!</h1>
+<p>You have successfully signed in.</p>
+
+<div class="fh-card">
+  <div class="fh-actions">
+    <a class="fh-btn fh-btn--block" href="{% url 'assessments:start' %}">Start a check-in</a>
+    <a class="fh-btn fh-btn--secondary fh-btn--block" href="{% url 'progress:dashboard' %}">My progress</a>
+  </div>
+
+  <form method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <div class="fh-actions">
+      <button type="submit" class="fh-btn fh-btn--secondary fh-btn--block">Log Out</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
