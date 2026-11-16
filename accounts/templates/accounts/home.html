@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to Farmer Health!</h1>
+<p>You have successfully signed in.</p>
+
+<div class="fh-card">
+  <div class="fh-actions">
+    <a class="fh-btn fh-btn--block" href="{% url 'assessments:start' %}">Start a check-in</a>
+    <a class="fh-btn fh-btn--secondary fh-btn--block" href="{% url 'progress:dashboard' %}">My progress</a>
+  </div>
+
+  <form method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <div class="fh-actions">
+      <button type="submit" class="fh-btn fh-btn--secondary fh-btn--block">Log Out</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
