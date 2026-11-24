@@ -112,6 +112,7 @@ a:hover { color: var(--fh-green-dark); }
     text-decoration: none;
 }
 .fh-brand img { display: block; height: 5.5rem; width: auto; }
+.fh-brand img { display: block; height: 4rem; width: auto; }
 
 .fh-main { padding-block: var(--fh-space-5); }
 
