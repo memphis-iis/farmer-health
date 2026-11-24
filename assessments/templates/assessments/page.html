@@ -1,0 +1,31 @@
+{% extends "assessments/base.html" %}
+{% block title %}Questions, page {{ page }} of {{ pages }}{% endblock %}
+{% block content %}
+<p class="fh-progress">{{ answered }} of {{ total }} answered</p>
+<p class="fh-scale-key">Choose a number from 1 to 5.<br><strong>1</strong> = not at all &nbsp;·&nbsp; <strong>5</strong> = very much.</p>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {% for row in rows %}
+    <div class="fh-card">
+        <fieldset class="fh-fieldset">
+            <legend class="fh-legend">{{ row.question.order }}. {{ row.question.text }}</legend>
+            <div class="fh-choices">
+                {% for choice in choices %}
+                <label class="fh-choice">
+                    <input type="radio" name="q{{ row.question.id }}" value="{{ choice }}"
+                           {% if row.answer == choice %}checked{% endif %}>
+                    <span>{{ choice }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% if row.error %}<p class="fh-error" role="alert">{{ row.error }}</p>{% endif %}
+        </fieldset>
+    </div>
+    {% endfor %}
+    <div class="fh-actions">
+        {% if not is_first %}<button type="submit" name="nav" value="back" class="fh-btn fh-btn--secondary">Back</button>{% endif %}
+        <button type="submit" name="nav" value="save" class="fh-btn fh-btn--secondary">Save and stay</button>
+        <button type="submit" name="nav" value="next" class="fh-btn">{% if is_last %}Review and finish{% else %}Next{% endif %}</button>
+    </div>
+</form>
+{% endblock %}

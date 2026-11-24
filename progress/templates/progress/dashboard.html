@@ -1,0 +1,81 @@
+{% extends "core/base.html" %}
+
+{% block title %}My Progress{% endblock %}
+
+{% block content %}
+<h1>My Progress</h1>
+<p>Track your wellbeing and see how your progress changes over time.</p>
+
+{% if has_assessments %}
+
+<ul class="fh-stats">
+  <li class="fh-stat">
+    <p class="fh-stat-label">Average score</p>
+    <p class="fh-stat-value">
+      {% if average_score != None %}{{ average_score|floatformat:2 }}{% else %}—{% endif %}
+    </p>
+  </li>
+
+  <li class="fh-stat">
+    <p class="fh-stat-label">Current weighted score</p>
+    <p class="fh-stat-value">
+      {% if current_weighted_score != None %}{{ current_weighted_score|floatformat:2 }}{% else %}—{% endif %}
+    </p>
+  </li>
+</ul>
+
+<section class="fh-card">
+  <h2>Progress over time</h2>
+  {% if chart_data %}
+    <p>Your average score for each check-in, from 1 to 5. A lower score means you are doing better.</p>
+    <div class="fh-chart">
+      {% for point in chart_data %}
+        <div class="fh-bar-item">
+          <div class="fh-bar-score">{{ point.score|floatformat:1 }}</div>
+          <div class="fh-bar" style="height: {{ point.height }}px;"></div>
+          <span class="fh-bar-label">{{ point.label }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No assessment scores are available to display yet.</p>
+  {% endif %}
+</section>
+
+<section class="fh-card">
+  <h2>Assessment history</h2>
+  <div class="fh-table-wrap">
+    <table class="fh-table">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Average score</th>
+          <th scope="col">Weighted score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for assessment in assessments %}
+        <tr>
+          <td>{{ assessment.completed_at|date:"M d, Y" }}</td>
+          <td>{{ assessment.average_score|default:"—" }}</td>
+          <td>{{ assessment.weighted_score|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% else %}
+
+<section class="fh-card">
+  <h2>Welcome to your progress page</h2>
+  <p>You haven't completed any assessments yet.</p>
+  <p>Once you finish your first one, your scores and history will appear here.</p>
+  <div class="fh-actions">
+    <a class="fh-btn fh-btn--block" href="{% url 'assessments:start' %}">Start a check-in</a>
+  </div>
+</section>
+
+{% endif %}
+{% endblock %}

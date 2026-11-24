@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<h1>Create Your Account</h1>
+<p>Join Farmer Health and take charge of your wellbeing.</p>
+
+<div class="fh-card">
+  <form method="post" class="fh-form">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="fh-error" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% for field in form %}
+      <div class="fh-field">
+        <label class="fh-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="fh-error" role="alert">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="fh-actions">
+      <button type="submit" class="fh-btn fh-btn--block">Create Account</button>
+    </div>
+  </form>
+
+  <p>Already have an account? <a href="{% url 'accounts:login' %}">Sign in</a></p>
+</div>
+{% endblock %}
