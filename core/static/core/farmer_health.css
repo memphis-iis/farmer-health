@@ -410,3 +410,26 @@ a:hover { color: var(--fh-green-dark); }
 @media (min-width: 40rem) {
   .fh-brand img { height: 6.5rem; }
 }
+/* Show password checkbox */
+.fh-show-password {
+  display: flex;
+  align-items: center;
+  gap: var(--fh-space-2, 0.5rem);
+  margin-top: 0.5rem;
+  min-height: 3rem;
+}
+.fh-show-password input[type="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--fh-green);
+}
+.fh-show-password label {
+  margin: 0;
+  font-weight: 400;
+}
+input[type="password"]::-ms-reveal {
+  display: none;
+}
