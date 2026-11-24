@@ -4,6 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.db.models import Avg
 from resources.models import Tier
+from django.core.validators import RegexValidator
+
 
 class Survey(models.Model):
     title = models.CharField(max_length=200)
@@ -93,3 +95,57 @@ class Response(models.Model):
             fields=["assessment", "question"],
             name="one_response_per_question",
         )]
+
+class TierMethod(models.TextChoices):
+    AVERAGE_CUTPOINT = "AVERAGE_CUTPOINT", "Average cutpoint"
+    MAJORITY = "MAJORITY", "Majority"
+
+class TierRule(models.Model):
+    survey = models.ForeignKey(
+        "assessments.Survey",
+        on_delete=models.CASCADE,
+        related_name="tier_rules",
+    )
+    method = models.CharField(max_length=20, choices=TierMethod.choices)
+    tier = models.CharField(max_length=10, choices=Tier.choices)
+    min_value = models.PositiveSmallIntegerField()
+    max_value = models.PositiveSmallIntegerField()
+    color_hex = models.CharField(
+        max_length=7,
+        validators=[
+            RegexValidator(
+                regex=r"^#[0-9A-Fa-f]{6}$",
+                message="Enter a color in #RRGGBB format.",
+            )
+        ],
+    )
+    label = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["survey", "method", "min_value"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["survey", "method", "tier"],
+                name="unique_tierrule_survey_method_tier",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(min_value__lte=models.F("max_value")),
+                name="tierrule_min_lte_max",
+            ),
+        ]
+
+    def clean(self):
+        if self.min_value is not None and self.max_value is not None:
+            if self.min_value > self.max_value:
+                raise ValidationError("min_value must be less than or equal to max_value.")
+
+            if self.survey_id:
+                survey = self.survey
+                if self.min_value < survey.scale_min or self.max_value > survey.scale_max:
+                    raise ValidationError(
+                        f"Range must fall within the survey scale "
+                        f"({survey.scale_min}-{survey.scale_max})."
+                    )
+
+    def __str__(self):
+        return f"{self.label} ({self.tier}: {self.min_value}-{self.max_value})"
