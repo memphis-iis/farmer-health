@@ -13,3 +13,5 @@ class SeasonalProfile(models.Model):
 
     def __str__(self):
             return f"{self.month}: {self.season_label}"
+
+
